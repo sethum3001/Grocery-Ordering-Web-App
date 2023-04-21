@@ -1,0 +1,56 @@
+package servelt.Order;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.item;
+import service.impl.ItemControllerImpl;
+
+/**
+ * Servlet implementation class Order
+ */
+@WebServlet("/OrderForm")
+public class OrderForm extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public OrderForm() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		String str = session.getAttribute("cusId").toString();
+		request.setAttribute("cusId", str);
+		
+		ItemControllerImpl ctrl = new ItemControllerImpl();
+		ArrayList<item> list = ctrl.getItemList();
+		session.setAttribute("list", list);
+		
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/orderForm.jsp");
+		dispatcher.forward(request, response);
+	}
+
+}
